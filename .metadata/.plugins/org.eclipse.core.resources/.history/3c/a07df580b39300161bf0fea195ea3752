@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+	<title>DataViz with D3.js</title>
+	<script src="../../js/d3/d3.v3.js"></script>
+</head>
+<body>
+	<script>
+	var q = d3.scale.quantize().domain([400, 1800]).range(["#FEF0D9", "#FDCC8A", "#FC8D59", "#E34A33", "#B30000"]);
+	console.log(q(1000)); // 60
+	</script>
+</body>
+</html>

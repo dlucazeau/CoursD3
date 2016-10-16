@@ -1,0 +1,23 @@
+<html>
+<head><title>DataViz with D3.js</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>
+        function a(element, eldict) {
+            el = $(document.createElementNS('http://www.w3.org/2000/svg', element));
+            el.attr(eldict).appendTo('#mySVG');
+        }
+
+        $(function () {
+            a('circle', {cx: 80, cy: 80, r: 44, stroke: '#0000ff', fill: 'none'});
+            a('circle', {cx: 180, cy: 110, r: 10});
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <svg id="mySVG">
+            <circle cx="100" cy="50" r="40" stroke="black" stroke-width="2" fill="aquamarine"/>
+        </svg>
+    </div>
+</body>
+</html>

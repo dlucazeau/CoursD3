@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+    <style>
+        .axis {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            text-anchor: end;
+            stroke: blue;
+            font-size: 4px;
+        }
+
+        .quadri {
+            stroke: #000;
+            fill: none;
+            stroke-width: .2;
+            stroke-dasharray: 2, 4;
+        }
+    </style>
+    <script src="../../js/jQuery/jquery-2.0.0.js"></script>
+
+</head>
+<body>
+    <div id="divGraphique" class="aGraph" style="position:absolute; top:0px; left:0; float:left;"/>
+    <script>
+        function chart() {
+            console.log("chart");
+            var width = 720, // default width
+                    height = 80; // default height
+
+            function myLineChart() {
+                console.log("myLineChart");
+                // generate chart here, using `width` and `height`
+            }
+
+            myLineChart.width = function (value) {
+                console.log("width");
+                if (!arguments.length) {
+                    return width;
+                }
+
+                width = value;
+                return myLineChart;
+            };
+
+            myLineChart.height = function (value) {
+                console.log("height");
+                if (!arguments.length) {
+                    return height;
+                }
+
+                height = value;
+                return myLineChart;
+            };
+
+            return myLineChart;
+        }
+        var myChart = chart().width(720).height(80);
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>DataViz with D3.js</title>
+    </head>
+    <body>
+        <script>
+        function chart() {
+        	console.log("chart");
+            var width = 720, // default width
+            	height = 80; // default height
+
+            function my() {
+            	console.log("my");
+            	// generate chart here, using `width` and `height`
+
+            	return my;
+            }
+
+            my.width = function(value) {
+            	console.log("width");
+                if (!arguments.length) return width;
+                width = value;
+                return my;
+            };
+
+            my.height = function(value) {
+            	console.log("height");
+                if (!arguments.length) return height;
+                height = value;
+                return my;
+            };
+
+            return my();
+        }
+        var myChart = chart().width(720).height(80);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move &apos;01-DayTurnOver.html, 01-WorkingDays.html, 02-TestData.html, 03-CalendarView.html, 04-TreeMap.html, DayTurnOver.csv, dji.csv, gpcath.json, WorkingDays.csv&apos; to &apos;WebContent&apos;" description="Move 9 resources to &apos;WebContent&apos;" destination="WebContent" element1="/50-CalendarView/01-DayTurnOver.html" element2="/50-CalendarView/01-WorkingDays.html" element3="/50-CalendarView/02-TestData.html" element4="/50-CalendarView/03-CalendarView.html" element5="/50-CalendarView/04-TreeMap.html" element6="/50-CalendarView/DayTurnOver.csv" element7="/50-CalendarView/dji.csv" element8="/50-CalendarView/gpcath.json" element9="/50-CalendarView/WorkingDays.csv" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="9" stamp="1476631385409" updateReferences="true"/>
+</session>

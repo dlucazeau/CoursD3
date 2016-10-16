@@ -1,0 +1,216 @@
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+    <script src="../../js/d3/d3.v3.js"></script>
+    <script src="../../js/jQuery/jquery-2.0.0.js"></script>
+    <style>
+        path {
+            stroke: #91268E;
+            stroke-width: .5;
+            fill: none;
+        }
+
+        .axis {
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            text-anchor: end;
+            fill: blue;
+            font-size: 7px;
+        }
+
+        .x.axis line {
+            stroke: red;
+        }
+
+        .x.axis .minor {
+            stroke-opacity: .5;
+        }
+
+        .x.axis path {
+            stroke: blue;
+            stroke-width: .5
+        }
+
+        .y.axis line, .y.axis path {
+            stroke: #000;
+        }
+
+        .x.axis .tick .grid line {
+            stroke: blue;
+            fill: blue;
+            stroke-width: .2;
+            stroke-dasharray: 2, 4;
+        }
+
+    </style>
+</head>
+<body>
+<div id="divGraphique" class="aGraph" style="position:absolute;top:0px;left:0; float:left;">
+    <svg height="300" width="500">
+        <g transform="translate(20,20)" id="graphique">
+            <path d="M0,190L12.105263157894736,182L24.210526315789473,174L36.315789473684205,170L48.421052631578945,158L60.52631578947368,152L72.63157894736841,132L84.73684210526315,122L96.84210526315789,116L108.94736842105263,90L121.05263157894736,80L133.1578947368421,80L145.26315789473682,77.99999999999997L157.36842105263156,84L169.4736842105263,96L181.57894736842107,101.99999999999997L193.68421052631578,96L205.7894736842105,80L217.89473684210526,58L230,46L242.1052631578947,58L254.21052631578945,48L266.3157894736842,44L278.42105263157896,53.99999999999997L290.52631578947364,60L302.6315789473684,88L314.7368421052631,104L326.84210526315786,101.99999999999997L338.9473684210526,90L351.05263157894734,82L363.15789473684214,82L375.2631578947368,84L387.36842105263156,100L399.4736842105263,111.99999999999997L411.578947368421,77.99999999999997L423.6842105263158,76L435.7894736842105,73.99999999999997L447.8947368421052,61.99999999999997L460,50"/>
+            <g transform="translate(0,260)" class="x axis">
+                <g transform="translate(0,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">0</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(60.52631578947368,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">5</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(121.05263157894736,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">10</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(181.57894736842107,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">15</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(242.1052631578947,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">20</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(302.6315789473684,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">25</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(363.15789473684214,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">30</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(423.6842105263158,0)" style="opacity: 1;" class="tick">
+                    <line x2="0" y2="6"/>
+                    <text style="text-anchor: middle;" dy=".71em" x="0" y="9">35</text>
+                    <line class="grid" y2="-260" x2="0" y1="0" x1="0"/>
+                </g>
+                <path d="M0,6V0H460V6" class="domain"/>
+            </g>
+            <g class="y axis">
+                <g transform="translate(0,260)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">0</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,240)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">1</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,220)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">2</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,200)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">3</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,180)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">4</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,160)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">5</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,140)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">6</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,119.99999999999997)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">7</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,100)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">8</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,80)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">9</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,60)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">10</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,39.99999999999997)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">11</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,20)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">12</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <g transform="translate(0,0)" style="opacity: 1;" class="tick">
+                    <line y2="0" x2="-6"/>
+                    <text style="text-anchor: end;" dy=".32em" y="0" x="-9">13</text>
+                    <line class="grid" y2="0" x2="460" y1="0" x1="0"/>
+                </g>
+                <path d="M-6,0H0V260H-6" class="domain"/>
+            </g>
+            <g>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="190" cx="0" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="182" cx="12.105263157894736" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="174" cx="24.210526315789473" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="170" cx="36.315789473684205" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="158" cx="48.421052631578945" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="152" cx="60.52631578947368" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="132" cx="72.63157894736841" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="122" cx="84.73684210526315" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="116" cx="96.84210526315789" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="90" cx="108.94736842105263" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="80" cx="121.05263157894736" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="80" cx="133.1578947368421" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="77.99999999999997" cx="145.26315789473682" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="84" cx="157.36842105263156" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="96" cx="169.4736842105263" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="101.99999999999997" cx="181.57894736842107" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="96" cx="193.68421052631578" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="80" cx="205.7894736842105" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="58" cx="217.89473684210526" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="46" cx="230" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="58" cx="242.1052631578947" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="48" cx="254.21052631578945" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="44" cx="266.3157894736842" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="53.99999999999997" cx="278.42105263157896" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="60" cx="290.52631578947364" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="88" cx="302.6315789473684" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="104" cx="314.7368421052631" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="101.99999999999997" cx="326.84210526315786" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="90" cx="338.9473684210526" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="82" cx="351.05263157894734" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="82" cx="363.15789473684214" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="84" cx="375.2631578947368" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="100" cx="387.36842105263156" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="111.99999999999997" cx="399.4736842105263" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="77.99999999999997" cx="411.578947368421" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="76" cx="423.6842105263158" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="73.99999999999997" cx="435.7894736842105" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="61.99999999999997" cx="447.8947368421052" r="3"/>
+                <circle style="stroke: rgb(145, 38, 142); fill: white; stroke-width: 1;" cy="50" cx="460" r="3"/>
+            </g>
+        </g>
+    </svg>
+</div>
+</body>
+</html>

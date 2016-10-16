@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>DataViz with D3.js</title>
+        <script src="../../js/d3/d3.v3.js"></script>
+        <style>
+            path {
+                stroke: #91268E;
+                stroke-width: .5;
+                fill: none;
+            }
+
+            .axis {
+                shape-rendering: crispEdges;
+            }
+
+            .axis text{
+                text-anchor: end;
+                fill: blue;
+                font-size:7px;
+            }
+
+            text.labelPoints{
+                text-anchor: middle;
+                font-size:7px;
+            }
+
+            .axis path {
+/*                 marker-end:url(#markerArrow); */
+                stroke: blue;
+                stroke-width: 1;
+            }
+
+            .axis .tick line {
+                stroke: blue;
+            }
+
+
+            .axis line.grid {
+                opacity: 1;
+                stroke: lightgrey;
+                stroke-width: 1;
+                stroke-dasharray: 2, 4;
+            }
+
+            #titre {
+                fill:#F8981D;
+                font-size: small;
+                text-anchor: middle;
+                font-weight: bold;
+            }
+
+            .titre {
+                fill: blue;
+                font-size: small;
+                text-anchor: middle;
+                font-weight: bold;
+            }
+
+            line.max {
+                stroke: red;
+                stroke-width: .4;
+            }
+
+            path.area {
+                stroke: none;
+                fill: steelblue;
+                fill-opacity: .2;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="divGraphique" class="aGraph" style="position:absolute;top:10px;left:10px; float:left;"></div>
+        <script>
+//         	var rows = d3.csv("/data/TauxDeChomageRegions-1982-2013.csv")
+//         		.row(function(d) { return {quater: new Date(d.quater), rate: +d.rate}; });
+//         		//.get(function(error, rows) { console.log(rows); });
+
+//         	console.log(rows);
+
+        	d3.csv("data/TauxDeChomageRegions-1982-2013.csv",
+        			function(d) {
+        				return {quater: new Date(d.quater), rate: +d.rate};
+        			},
+        			function(error, rows) {
+        	            var max, min, maxData, minData, avgData;
+        				var pasY = 2.5;
+        	            var  Intercept, Slope;
+
+        				var dataset = rows;
+//         				console.log(dataset);
+        				var grandWidth = 600, grandHeight = 400;
+
+        	        	var margin = {top: 40, right: 40, bottom: 60, left: 60},
+        	            	width = grandWidth - margin.left - margin.right,
+        	            	height = grandHeight - margin.top - margin.bottom;
+
+
+        	            function minmax() {
+        	                max = Number.MIN_VALUE;
+        	                min = Number.MAX_VALUE;
+
+        	                var sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
+        	                var N = dataset.length;
+// 							console.log(N);
+        	                for(var i = 0; i < dataset.length; i++) {
+        	                	var current = dataset[i].rate;
+        	                	sumX += i;
+        	                	sumY += current;
+        	                	sumX2 += i * i;
+        	                	sumXY += i * current;
+        	                    // Recherche minimum et maximum
+        	                    if(current > max) max = current;
+        	                    if(current < min) min = current;
+        	                }
+        	                avgData = sumY / N;
+        	                minData = min;
+        	                maxData = max;
+        	                max = (Math.round(max / pasY) + 1) * pasY;
+        	                max = Math.round(max+.5);
+        	                //max = 100;
+
+        	                // calcul de la régression linéaire par les moindres carrés
+        	                Slope = (N * sumXY - sumX * sumY) / (N * sumX2 - sumX * sumX);
+        	                // Intercept = (sumY / N) - Slope * (sumX / N);
+        	                Intercept = avgData - Slope * (sumX / N);
+        	                //console.log("Intercept : " + Intercept + " - Slope : " + Slope);
+         	                console.log(maxData);
+        	            };
+
+        	            minmax();
+
+        	            var svg = d3.select('#divGraphique').append('svg')
+        	            			.attr('width', grandWidth)
+        	            			.attr('height', grandHeight)
+        	            			.attr('id', 'svgGraphique');
+
+        	            var graph = svg.append('g')
+        	            			    .attr('id', 'graphique')
+        	            				.attr('transform', "translate(" + margin.left + "," + margin.top + ")");
+
+        	            var rawQuaters = rows.map(function(d) { return d.quater; });
+        	            var minQuater = d3.min(rawQuaters);
+        	            var maxQuater = d3.max(rawQuaters);
+//         	            console.log(minQuater+0);
+//         	            console.log(maxQuater+0);
+
+        	            var xScale = d3.time.scale()
+            				.domain([minQuater, maxQuater])
+            				.nice(d3.time.month)
+            				.range([0, width]);
+        	            var yScale = d3.scale.linear().domain([0, maxData]).range([height, 0]);
+
+            			var line = d3.svg.line()
+            				.x(function(d) { return xScale(d.quater); })
+            				.y(function(d) { return yScale(d.rate); });
+
+            			graph.append('path')
+            				.attr('d', line(dataset));
+
+            			// Add the x-axis.
+                        var xAxis = d3.svg.axis();
+                        xAxis.scale(xScale)
+                        	//.tickFormat(function(d) { return d + baseYear; })
+                        	.orient('bottom')
+                        	.ticks(d3.time.year, 3);
+                        graph.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + (height) + ")")
+                            .call(xAxis)
+                          .selectAll("text")
+                            .style("text-anchor", "end")
+//                             .attr("dx", "-.8em")
+//                             .attr("dy", ".15em")
+                            .attr("transform", function(d) {
+                                return "rotate(-65) translate(-7, -7)";
+                            });
+                        var yAxis = d3.svg.axis();
+                        yAxis.scale(yScale)
+                    		.orient('left');
+                    	graph.append("g")
+                        	.attr("class", "y axis")
+                        	.call(yAxis);
+        			}
+        		);
+        </script>
+    </body>
+</html>

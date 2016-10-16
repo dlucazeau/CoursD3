@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>DataViz with D3.js</title>
+        <style>
+            .axis {
+                fill: blue;
+                stroke: blue;
+                stroke-width: 1;
+                /*stroke-dasharray: 2, 4;*/
+                shape-rendering: crispEdges;
+            }
+
+            .quadri {
+                stroke: blue;
+                fill: none;
+                stroke-width: .2;
+                stroke-dasharray: 2, 4;
+            }
+
+            line.ticks {
+                stroke: blue;
+                fill: blue;
+                stroke-width: .4;
+            }
+
+            line.max {
+                stroke: red;
+                stroke-width: .4;
+            }
+
+            text.ticks {
+                fill: blue;
+                font-size:4px;
+            }
+
+            .ticksY {
+                text-anchor: end;
+            }
+
+            .ticksX {
+                text-anchor: end;
+            }
+            .data {
+                fill:#91268E;
+                font-size:4px;
+                text-anchor: middle;
+            }
+
+            #titre {
+                fill:#F8981D;
+                font-size: x-small;
+                text-anchor: middle;
+            }
+        </style>
+        <script src="../../js/d3/d3.v3.min.js"></script>
+        <script src="../../js/jQuery/jquery-2.0.0.js"></script>
+        <script>
+            function lineChart() {
+                var height = 600, width = 1200;
+                var marginTop = 20, marginBottom = 20, marginLeft = 20, marginRight = 20;
+                var dataset = [3.5, 3.9, 4.3, 4.5, 5.1, 5.4, 6.4, 6.9, 7.2, 8.5, 9, 9, 9.1, 8.8, 8.2, 7.9, 8.2, 9, 10.1, 10.7, 10.1, 10.6, 10.8, 10.3, 10, 8.6, 7.8, 7.9, 8.5, 8.9, 8.9, 8.8, 8, 7.4, 9.1, 9.2, 9.3, 9.9, 10.5];
+                var ax, bx, ay, by;
+                var pasY = 2.5;
+                var baseYear = 1975;
+
+                var max, min, maxData, minData, avgData;
+
+                function myLineChart() {
+                	minmax();
+
+                    affineX();
+                    affineY();
+                    addElt('<svg/>', {width:width, height:height, id:"svgGraphique"}, 'divGraphique');
+                    $('#svgGraphique').html('<defs><marker id="markerArrow" markerWidth="5" markerHeight="4" refx="2" refy="2" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,4 L5,2 L0,0" style="stroke: #000000; stroke-width: .2; stroke: blue; fill:blue" /></marker></defs>');
+                    addElt('<g/>', { id:"graphique"}, 'svgGraphique');
+                    addElt('<rect/>', {x:"0", y:"0", width:width, height:height, style:"stroke-width:1; stroke:black", fill:"none"}, 'graphique');
+
+                    // Axe des X
+                    addElt('<line/>', {x1: marginLeft, x2:width-marginRight, y1:height-marginBottom, y2:height-marginBottom, class:'axis', "marker-end":'url(#markerArrow)'}, 'graphique');
+                    // Axe des Y
+                    addElt('<line/>', {x1: marginLeft, x2:marginLeft, y1:height-marginBottom, y2:marginTop, class:'axis', "marker-end":'url(#markerArrow)'}, 'graphique');
+
+                    // Titre
+                    addElt('<text/>', {x:(width/2), y:(marginTop/2), class:'titre', id:'titre'}, 'graphique');
+                    $('#'+'titre').html("Évolution du taux de chômage en France");
+
+                    var path = "";
+                    for(var i = 0; i < dataset.length; i++) {
+						path += i == 0 ? 'M ' : 'L ';
+                        var vcx = projectX(i);
+                        var vcy = projectY(dataset[i]);
+                        path += vcx + ' ' + vcy + ' ';
+                        addElt('<circle/>', {cx: vcx, cy:vcy, r:1, stroke:'#91268E', fill:'white', 'stroke-width':.2}, 'graphique');
+
+                        // Les lignes verticales, une ligne sur cinq pour ne pas charger le graphique
+                        if(i%5 == 0 || i == dataset.length-1) {
+                        	// La valeur de la donnée près du cercle
+                            addElt('<text/>', {x:vcx, y:vcy+5, class:'data', id:'data_x_'+i}, 'graphique');
+                            $('#'+'data_x_'+i).html(dataset[i]);
+
+                        	// Les ticks de l'axe des X
+							var paramRotate1 = "rotate(20," + vcx + ',' + (height-marginBottom) + ')';
+							addElt('<line/>', {x1:vcx, x2:vcx, y1:height-(marginBottom-3), y2:height-(marginBottom+.2), class:'ticks'}, 'graphique');
+                        	var paramRotate2 = "rotate(-45," + vcx + ',' + (height-(marginBottom-6)) + ')';
+							addElt('<text/>', {x:vcx, y:height-(marginBottom-6), transform:paramRotate2, class:'ticks ticksX', id:'text_x_'+i}, 'graphique');
+	                        $('#'+'text_x_'+i).html(baseYear + i);
+
+							addElt('<line/>', {x1: vcx, x2:vcx, y1:height-marginBottom, y2:marginTop, class:'quadri'}, 'graphique');
+                        }
+                    }
+					var k = 0;
+                    for(var i=pasY; i <= max; i += pasY) {
+                    	// Les ticks de l'axe des Y
+                        addElt('<line/>', {x1:marginLeft-2, x2:marginLeft+.2, y1:projectY(i), y2: projectY(i), class:'ticks', id:'tick_y_'+k}, 'graphique');
+                        addElt('<text/>', {x:marginLeft-4, y:projectY(i), class:'ticks ticksY', id:'text_y_'+k}, 'graphique');
+                        $('#'+'text_y_'+k).html(i);
+
+                        addElt('<line/>', {x1:marginLeft, x2:width-marginRight, y1:projectY(i), y2: projectY(i), class:'quadri'}, 'graphique');
+                        k++;
+                    }
+
+                 	// Ligne du maximum
+                    addElt('<line/>', {x1: marginLeft, x2:width-marginRight, y1:projectY(maxData), y2:projectY(maxData), class:'max'}, 'graphique');
+                 	// La valeur du maximum
+                    addElt('<text/>', {x:marginLeft+5, y:projectY(maxData)-2, class:'data', id:'max', style:'fill:red; text-anchor: start'}, 'graphique');
+                    $('#'+'max').html(Math.round(maxData*10)/10);
+
+                 	// Ligne de la moyenne
+                    addElt('<line/>', {x1: marginLeft, x2:width-marginRight, y1:projectY(avgData), y2:projectY(avgData), class:'max', style:'stroke:#F8981D;'}, 'graphique');
+                	// La valeur de la moyenne
+                    addElt('<text/>', {x:marginLeft+5, y:projectY(avgData)-2, class:'data', id:'avg', style:'fill:#F8981D; text-anchor: start'}, 'graphique');
+                    $('#'+'avg').html(Math.round(avgData*10)/10);
+
+                 	// Trend line
+                    //addElt('<line/>', {x1: marginLeft, x2:width-marginRight, y1:projectY(bReg), y2:projectY(aReg * (dataset.length-1) + bReg), class:'max', style:'stroke:#F8981D;'}, 'graphique');
+
+                 	addElt('<path/>', {stroke:'#91268E', "stroke-width":".5", fill:"none", d:path}, 'graphique');
+
+                    $("body").html($("body").html());
+
+                    return myLineChart;
+                }
+
+                function addElt(element, props, place) {
+                    el = $(element);
+                    el.attr(props).appendTo('#' + place);
+                }
+
+                function minmax() {
+                    max = Number.MIN_VALUE;
+                    min = Number.MAX_VALUE;
+                    var sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
+                    var N = dataset.length;
+
+                    for(var i = 0; i < dataset.length; i++) {
+                    	sumY += dataset[i];
+                        // Recherche minimum et maximum
+                        if(dataset[i] > max) max = dataset[i];
+                        if(dataset[i] < min) min = dataset[i];
+                    }
+                    avgData = sumY / N;
+                    minData = min;
+                    maxData = max;
+                    max = (Math.round(max / pasY) + 1) * pasY;
+                    max = Math.round(max+.5);
+                };
+
+                function affineX() {
+//                     var x0 = 0, x1 = dataset.length - 1;
+//                     var y0 = marginLeft, y1 = width - marginRight;
+
+//                     bx = y0;
+//                     ax = (y1 - y0) / (x1 - x0);
+
+                    bx = marginLeft;
+                    ax = (width - marginRight - marginLeft) / (dataset.length - 1);
+                }
+
+                function projectX(x) {
+                	return ax *  x + bx;
+                }
+
+                myLineChart.projectXX = function (x) {
+                	return projectX(x);
+                }
+
+                function affineY() {
+//                     var x0 = 0, x1 = max;
+//                     var y0 = height - marginTop, y1 = marginBottom;
+
+//                     by = y0;
+//                     ay = (y1 - y0) / (x1 - x0);
+
+                    by = height - marginBottom;
+                    ay = (marginTop + marginBottom - height) / max;
+                    //console.log(".domain([0," + max + "]).range([" + (height - marginBottom) + "," + marginTop + "])");
+                }
+
+                function projectY(x) {
+                	return ay * x + by;
+                }
+
+                myLineChart.projectYY = function (x) {
+                	return projectY(x);
+                }
+
+
+                myLineChart.width = function(value) {
+                    if (!arguments.length) return width;
+                    width = value;
+                    $("#divGraphique" ).empty();
+
+                    $("body").html($("body").html());
+                    return myLineChart();
+                };
+
+                myLineChart.height = function(value) {
+                    if (!arguments.length) return height;
+                    height = value;
+                    $("#divGraphique" ).empty();
+
+                    $("body").html($("body").html());
+                    return myLineChart();
+                };
+
+                myLineChart.baseYear = function(value) {
+                    if (!arguments.length) return baseYear;
+                    baseYear = value;
+                    $("#divGraphique" ).empty();
+
+                    $("body").html($("body").html());
+                    return myLineChart();
+                };
+
+                return myLineChart();
+            }
+
+            $(function() {
+            	var w = 600;
+            	var h = w / ((1 + Math.sqrt(5)) / 2);
+                var myChart = lineChart().width(w).height(h); //.baseYear(2000);
+                myChart.width(1200);
+                var Y = d3.scale.linear().domain([0, 13]).range([130, 20]);
+            	console.log(myChart.projectYY(10));
+            	console.log(Y(10));
+            });
+        </script>
+    </head>
+    <body>
+        <div id="divGraphique" class="aGraph" style="position:absolute;top:0px;left:0; float:left;"></div>
+    </body>
+</html>

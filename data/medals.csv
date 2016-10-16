@@ -1,0 +1,240 @@
+idcontinent,namecontinent,idregion,nameregion,idcountry,nom
+6,Oceania,2,Australia and New Zealand,NFK,Norfolk Island                                      
+5,North America,5,Caribbean,ABW,Aruba                                               
+3,Asia,22,Southern and Central Asia,AFG,Afghanistan                                         
+1,Africa,6,Central Africa,AGO,Angola                                              
+5,North America,5,Caribbean,AIA,Anguilla                                            
+4,Europe,23,Southern Europe,ALB,Albania                                             
+4,Europe,23,Southern Europe,AND,Andorra                                             
+5,North America,5,Caribbean,ANT,Netherlands Antilles                                
+3,Asia,14,Middle East,ARE,United Arab Emirates                                
+7,South America,19,South America,ARG,Argentina                                           
+3,Asia,14,Middle East,ARM,Armenia                                             
+6,Oceania,18,Polynesia,ASM,American Samoa                                      
+2,Antarctica,1,Antarctica,ATA,Antarctica                                          
+2,Antarctica,1,Antarctica,ATF,French Southern territories                         
+5,North America,5,Caribbean,ATG,Antigua and Barbuda                                 
+6,Oceania,2,Australia and New Zealand,AUS,Australia                                           
+4,Europe,25,Western Europe,AUT,Austria                                             
+3,Asia,14,Middle East,AZE,Azerbaijan                                          
+1,Africa,8,Eastern Africa,BDI,Burundi                                             
+4,Europe,25,Western Europe,BEL,Belgium                                             
+1,Africa,24,Western Africa,BEN,Benin                                               
+1,Africa,24,Western Africa,BFA,Burkina Faso                                        
+3,Asia,22,Southern and Central Asia,BGD,Bangladesh                                          
+4,Europe,10,Eastern Europe,BGR,Bulgaria                                            
+3,Asia,14,Middle East,BHR,Bahrain                                             
+5,North America,5,Caribbean,BHS,Bahamas                                             
+4,Europe,23,Southern Europe,BIH,Bosnia and Herzegovina                              
+4,Europe,10,Eastern Europe,BLR,Belarus                                             
+5,North America,7,Central America,BLZ,Belize                                              
+5,North America,16,North America,BMU,Bermuda                                             
+7,South America,19,South America,BOL,Bolivia                                             
+7,South America,19,South America,BRA,Brazil                                              
+5,North America,5,Caribbean,BRB,Barbados                                            
+3,Asia,20,Southeast Asia,BRN,Brunei                                              
+3,Asia,22,Southern and Central Asia,BTN,Bhutan                                              
+2,Antarctica,1,Antarctica,BVT,Bouvet Island                                       
+1,Africa,21,Southern Africa,BWA,Botswana                                            
+1,Africa,6,Central Africa,CAF,Central African Republic                            
+5,North America,16,North America,CAN,Canada                                              
+6,Oceania,2,Australia and New Zealand,CCK,Cocos (Keeling) Islands                             
+4,Europe,25,Western Europe,CHE,Switzerland                                         
+7,South America,19,South America,CHL,Chile                                               
+3,Asia,9,Eastern Asia,CHN,China                                               
+1,Africa,24,Western Africa,CIV,Côte d’Ivoire                                       
+1,Africa,6,Central Africa,CMR,Cameroon                                            
+1,Africa,6,Central Africa,COD,"Congo, The Democratic Republic of the               "
+1,Africa,6,Central Africa,COG,Congo                                               
+6,Oceania,18,Polynesia,COK,Cook Islands                                        
+7,South America,19,South America,COL,Colombia                                            
+1,Africa,8,Eastern Africa,COM,Comoros                                             
+1,Africa,24,Western Africa,CPV,Cape Verde                                          
+5,North America,7,Central America,CRI,Costa Rica                                          
+5,North America,5,Caribbean,CUB,Cuba                                                
+6,Oceania,2,Australia and New Zealand,CXR,Christmas Island                                    
+5,North America,5,Caribbean,CYM,Cayman Islands                                      
+3,Asia,14,Middle East,CYP,Cyprus                                              
+4,Europe,10,Eastern Europe,CZE,Czech Republic                                      
+4,Europe,25,Western Europe,DEU,Germany                                             
+1,Africa,8,Eastern Africa,DJI,Djibouti                                            
+5,North America,5,Caribbean,DMA,Dominica                                            
+4,Europe,15,Nordic Countries,DNK,Denmark                                             
+5,North America,5,Caribbean,DOM,Dominican Republic                                  
+1,Africa,17,Northern Africa,DZA,Algeria                                             
+7,South America,19,South America,ECU,Ecuador                                             
+1,Africa,17,Northern Africa,EGY,Egypt                                               
+1,Africa,8,Eastern Africa,ERI,Eritrea                                             
+1,Africa,17,Northern Africa,ESH,Western Sahara                                      
+4,Europe,23,Southern Europe,ESP,Spain                                               
+4,Europe,3,Baltic Countries,EST,Estonia                                             
+1,Africa,8,Eastern Africa,ETH,Ethiopia                                            
+4,Europe,15,Nordic Countries,FIN,Finland                                             
+6,Oceania,11,Melanesia,FJI,Fiji Islands                                        
+7,South America,19,South America,FLK,Falkland Islands                                    
+4,Europe,25,Western Europe,FRA,France                                              
+4,Europe,15,Nordic Countries,FRO,Faroe Islands                                       
+6,Oceania,12,Micronesia,FSM,"Micronesia, Federated States of                     "
+1,Africa,6,Central Africa,GAB,Gabon                                               
+4,Europe,4,British Islands,GBR,United Kingdom                                      
+3,Asia,14,Middle East,GEO,Georgia                                             
+1,Africa,24,Western Africa,GHA,Ghana                                               
+4,Europe,23,Southern Europe,GIB,Gibraltar                                           
+1,Africa,24,Western Africa,GIN,Guinea                                              
+5,North America,5,Caribbean,GLP,Guadeloupe                                          
+1,Africa,24,Western Africa,GMB,Gambia                                              
+1,Africa,24,Western Africa,GNB,Guinea-Bissau                                       
+1,Africa,6,Central Africa,GNQ,Equatorial Guinea                                   
+4,Europe,23,Southern Europe,GRC,Greece                                              
+5,North America,5,Caribbean,GRD,Grenada                                             
+5,North America,16,North America,GRL,Greenland                                           
+5,North America,7,Central America,GTM,Guatemala                                           
+7,South America,19,South America,GUF,French Guiana                                       
+6,Oceania,12,Micronesia,GUM,Guam                                                
+7,South America,19,South America,GUY,Guyana                                              
+3,Asia,9,Eastern Asia,HKG,Hong Kong                                           
+2,Antarctica,1,Antarctica,HMD,Heard Island and McDonald Islands                   
+5,North America,7,Central America,HND,Honduras                                            
+4,Europe,23,Southern Europe,HRV,Croatia                                             
+5,North America,5,Caribbean,HTI,Haiti                                               
+4,Europe,10,Eastern Europe,HUN,Hungary                                             
+3,Asia,20,Southeast Asia,IDN,Indonesia                                           
+3,Asia,22,Southern and Central Asia,IND,India                                               
+1,Africa,8,Eastern Africa,IOT,British Indian Ocean Territory                      
+4,Europe,4,British Islands,IRL,Ireland                                             
+3,Asia,22,Southern and Central Asia,IRN,Iran                                                
+3,Asia,14,Middle East,IRQ,Iraq                                                
+4,Europe,15,Nordic Countries,ISL,Iceland                                             
+3,Asia,14,Middle East,ISR,Israel                                              
+4,Europe,23,Southern Europe,ITA,Italy                                               
+5,North America,5,Caribbean,JAM,Jamaica                                             
+3,Asia,14,Middle East,JOR,Jordan                                              
+3,Asia,9,Eastern Asia,JPN,Japan                                               
+3,Asia,22,Southern and Central Asia,KAZ,Kazakstan                                           
+1,Africa,8,Eastern Africa,KEN,Kenya                                               
+3,Asia,22,Southern and Central Asia,KGZ,Kyrgyzstan                                          
+3,Asia,20,Southeast Asia,KHM,Cambodia                                            
+6,Oceania,12,Micronesia,KIR,Kiribati                                            
+5,North America,5,Caribbean,KNA,Saint Kitts and Nevis                               
+3,Asia,9,Eastern Asia,KOR,South Korea                                         
+3,Asia,14,Middle East,KWT,Kuwait                                              
+3,Asia,20,Southeast Asia,LAO,Laos                                                
+3,Asia,14,Middle East,LBN,Lebanon                                             
+1,Africa,24,Western Africa,LBR,Liberia                                             
+1,Africa,17,Northern Africa,LBY,Libyan Arab Jamahiriya                              
+5,North America,5,Caribbean,LCA,Saint Lucia                                         
+4,Europe,25,Western Europe,LIE,Liechtenstein                                       
+3,Asia,22,Southern and Central Asia,LKA,Sri Lanka                                           
+1,Africa,21,Southern Africa,LSO,Lesotho                                             
+4,Europe,3,Baltic Countries,LTU,Lithuania                                           
+4,Europe,25,Western Europe,LUX,Luxembourg                                          
+4,Europe,3,Baltic Countries,LVA,Latvia                                              
+3,Asia,9,Eastern Asia,MAC,Macao                                               
+1,Africa,17,Northern Africa,MAR,Morocco                                             
+4,Europe,25,Western Europe,MCO,Monaco                                              
+4,Europe,10,Eastern Europe,MDA,Moldova                                             
+1,Africa,8,Eastern Africa,MDG,Madagascar                                          
+3,Asia,22,Southern and Central Asia,MDV,Maldives                                            
+5,North America,7,Central America,MEX,Mexico                                              
+6,Oceania,12,Micronesia,MHL,Marshall Islands                                    
+4,Europe,23,Southern Europe,MKD,Macedonia                                           
+1,Africa,24,Western Africa,MLI,Mali                                                
+4,Europe,23,Southern Europe,MLT,Malta                                               
+3,Asia,20,Southeast Asia,MMR,Myanmar                                             
+3,Asia,9,Eastern Asia,MNG,Mongolia                                            
+6,Oceania,12,Micronesia,MNP,Northern Mariana Islands                            
+1,Africa,8,Eastern Africa,MOZ,Mozambique                                          
+1,Africa,24,Western Africa,MRT,Mauritania                                          
+5,North America,5,Caribbean,MSR,Montserrat                                          
+5,North America,5,Caribbean,MTQ,Martinique                                          
+1,Africa,8,Eastern Africa,MUS,Mauritius                                           
+1,Africa,8,Eastern Africa,MWI,Malawi                                              
+3,Asia,20,Southeast Asia,MYS,Malaysia                                            
+1,Africa,8,Eastern Africa,MYT,Mayotte                                             
+1,Africa,21,Southern Africa,NAM,Namibia                                             
+6,Oceania,11,Melanesia,NCL,New Caledonia                                       
+1,Africa,24,Western Africa,NER,Niger                                               
+1,Africa,24,Western Africa,NGA,Nigeria                                             
+5,North America,7,Central America,NIC,Nicaragua                                           
+6,Oceania,18,Polynesia,NIU,Niue                                                
+4,Europe,25,Western Europe,NLD,Netherlands                                         
+4,Europe,15,Nordic Countries,NOR,Norway                                              
+3,Asia,22,Southern and Central Asia,NPL,Nepal                                               
+6,Oceania,12,Micronesia,NRU,Nauru                                               
+6,Oceania,2,Australia and New Zealand,NZL,New Zealand                                         
+3,Asia,14,Middle East,OMN,Oman                                                
+3,Asia,22,Southern and Central Asia,PAK,Pakistan                                            
+5,North America,7,Central America,PAN,Panama                                              
+6,Oceania,18,Polynesia,PCN,Pitcairn                                            
+7,South America,19,South America,PER,Peru                                                
+3,Asia,20,Southeast Asia,PHL,Philippines                                         
+6,Oceania,12,Micronesia,PLW,Palau                                               
+6,Oceania,11,Melanesia,PNG,Papua New Guinea                                    
+4,Europe,10,Eastern Europe,POL,Poland                                              
+5,North America,5,Caribbean,PRI,Puerto Rico                                         
+3,Asia,9,Eastern Asia,PRK,North Korea                                         
+4,Europe,23,Southern Europe,PRT,Portugal                                            
+7,South America,19,South America,PRY,Paraguay                                            
+3,Asia,14,Middle East,PSE,Palestine                                           
+6,Oceania,18,Polynesia,PYF,French Polynesia                                    
+3,Asia,14,Middle East,QAT,Qatar                                               
+1,Africa,8,Eastern Africa,REU,Réunion                                             
+4,Europe,10,Eastern Europe,ROM,Romania                                             
+4,Europe,10,Eastern Europe,RUS,Russian Federation                                  
+1,Africa,8,Eastern Africa,RWA,Rwanda                                              
+3,Asia,14,Middle East,SAU,Saudi Arabia                                        
+1,Africa,17,Northern Africa,SDN,Sudan                                               
+1,Africa,24,Western Africa,SEN,Senegal                                             
+3,Asia,20,Southeast Asia,SGP,Singapore                                           
+2,Antarctica,1,Antarctica,SGS,South Georgia and the South Sandwich Islands        
+1,Africa,24,Western Africa,SHN,Saint Helena                                        
+4,Europe,15,Nordic Countries,SJM,Svalbard and Jan Mayen                              
+6,Oceania,11,Melanesia,SLB,Solomon Islands                                     
+1,Africa,24,Western Africa,SLE,Sierra Leone                                        
+5,North America,7,Central America,SLV,El Salvador                                         
+4,Europe,23,Southern Europe,SMR,San Marino                                          
+1,Africa,8,Eastern Africa,SOM,Somalia                                             
+5,North America,16,North America,SPM,Saint Pierre and Miquelon                           
+1,Africa,6,Central Africa,STP,Sao Tome and Principe                               
+7,South America,19,South America,SUR,Suriname                                            
+4,Europe,10,Eastern Europe,SVK,Slovakia                                            
+4,Europe,23,Southern Europe,SVN,Slovenia                                            
+4,Europe,15,Nordic Countries,SWE,Sweden                                              
+1,Africa,21,Southern Africa,SWZ,Swaziland                                           
+1,Africa,8,Eastern Africa,SYC,Seychelles                                          
+3,Asia,14,Middle East,SYR,Syria                                               
+5,North America,5,Caribbean,TCA,Turks and Caicos Islands                            
+1,Africa,6,Central Africa,TCD,Chad                                                
+1,Africa,24,Western Africa,TGO,Togo                                                
+3,Asia,20,Southeast Asia,THA,Thailand                                            
+3,Asia,22,Southern and Central Asia,TJK,Tajikistan                                          
+6,Oceania,18,Polynesia,TKL,Tokelau                                             
+3,Asia,22,Southern and Central Asia,TKM,Turkmenistan                                        
+3,Asia,20,Southeast Asia,TMP,East Timor                                          
+6,Oceania,18,Polynesia,TON,Tonga                                               
+5,North America,5,Caribbean,TTO,Trinidad and Tobago                                 
+1,Africa,17,Northern Africa,TUN,Tunisia                                             
+3,Asia,14,Middle East,TUR,Turkey                                              
+6,Oceania,18,Polynesia,TUV,Tuvalu                                              
+3,Asia,9,Eastern Asia,TWN,Taiwan                                              
+1,Africa,8,Eastern Africa,TZA,Tanzania                                            
+1,Africa,8,Eastern Africa,UGA,Uganda                                              
+4,Europe,10,Eastern Europe,UKR,Ukraine                                             
+6,Oceania,13,Micronesia/Caribbean,UMI,United States Minor Outlying Islands                
+7,South America,19,South America,URY,Uruguay                                             
+5,North America,16,North America,USA,United States                                       
+3,Asia,22,Southern and Central Asia,UZB,Uzbekistan                                          
+4,Europe,23,Southern Europe,VAT,Holy See (Vatican City State)                       
+5,North America,5,Caribbean,VCT,Saint Vincent and the Grenadines                    
+7,South America,19,South America,VEN,Venezuela                                           
+5,North America,5,Caribbean,VGB,"Virgin Islands, British                             "
+5,North America,5,Caribbean,VIR,"Virgin Islands, U.S.                                "
+3,Asia,20,Southeast Asia,VNM,Vietnam                                             
+6,Oceania,11,Melanesia,VUT,Vanuatu                                             
+6,Oceania,18,Polynesia,WLF,Wallis and Futuna                                   
+6,Oceania,18,Polynesia,WSM,Samoa                                               
+3,Asia,14,Middle East,YEM,Yemen                                               
+4,Europe,23,Southern Europe,YUG,Yugoslavia                                          
+1,Africa,21,Southern Africa,ZAF,South Africa                                        
+1,Africa,8,Eastern Africa,ZMB,Zambia                                              
+1,Africa,8,Eastern Africa,ZWE,Zimbabwe                                            

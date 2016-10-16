@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="ISO-8859-1">
+    <title>DataViz with D3.js</title>
+    <link rel="stylesheet" href="css/colorbrewer.css"/>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        div.tooltip {
+            color: #222;
+            background: #FFFF80;
+            padding: .5em;
+            text-shadow: #f5f5f5 0 1px 0;
+            border-radius: 5px;
+            box-shadow: 0px 0px 2px 0px #a6a6a6;
+            opacity: 0.75;
+            position: absolute;
+        }
+
+        .textLegenda {
+            font: 10px sans-serif;
+        }
+
+        input[type="range"] {
+            display: inline-block;
+            margin-bottom: 1em;
+            margin-right: .2em;
+            width: 135px;
+            background: none !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        input:focus {
+            border: 2px solid #2Cb2bA;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 135px;
+            height: 5px;
+            background-color: #eee;
+            border: none;
+            border-radius: 3px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            border: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2Cb2bA;
+            margin-top: -8px;
+        }
+
+        input[type=range]::-moz-range-track {
+            width: 135px;
+            height: 5px;
+            background-color: #eee;
+            border: none;
+            border-radius: 3px;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            border: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2Cb2bA;
+        }
+
+        input[type=range]::-ms-track {
+            width: 135px;
+            height: 20px;
+            background-color: #eee;
+            border: none;
+            border-radius: 10px;
+            color: transparent;
+        }
+
+        input[type=range]::-ms-thumb {
+            border: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2Cb2bA;
+        }
+    </style>
+    <script src="../../js/jQuery/jquery-2.0.0.min.js"></script>
+    <script src="../../js/d3/d3.v3.min.js"></script>
+
+    <script>
+        var nbQuartile = 6;
+        var dataMin = Number.MAX_VALUE,
+            dataMax = Number.MIN_VALUE;
+
+        var tooltip, svg;
+        var bottomSvg;
+        var wPanelLegenda = 15, hPanelLegenda = 15;
+
+        var depData = [];
+        var allData = [];
+        var allQuantile = [];
+
+        var jsonData = [{"dep": "dep01", "nb": 1058}, {"dep": "dep02", "nb": 358}, {"dep": "dep03", "nb": 279}, {"dep": "dep04", "nb": 181}, {"dep": "dep05", "nb": 165}, {"dep": "dep06", "nb": 1481}, {"dep": "dep07", "nb": 525}, { "dep": "dep08", "nb": 205}, {"dep": "dep09", "nb": 97}, {"dep": "dep10", "nb": 300}, {"dep": "dep11", "nb": 344}, {"dep": "dep12", "nb": 249}, {"dep": "dep13", "nb": 2423}, {"dep": "dep14", "nb": 425}, {"dep": "dep15", "nb": 113}, { "dep": "dep16", "nb": 271}, {"dep": "dep17", "nb": 588}, {"dep": "dep18", "nb": 308}, {"dep": "dep19", "nb": 185}, {"dep": "dep21", "nb": 726}, {"dep": "dep22", "nb": 243}, {"dep": "dep23", "nb": 69}, {"dep": "dep24", "nb": 349}, { "dep": "dep25", "nb": 1011}, {"dep": "dep26", "nb": 649}, {"dep": "dep27", "nb": 718}, {"dep": "dep28", "nb": 317}, {"dep": "dep29", "nb": 424}, {"dep": "dep2a", "nb": 144}, {"dep": "dep2b", "nb": 144}, {"dep": "dep30", "nb": 1242}, { "dep": "dep31", "nb": 1325}, {"dep": "dep32", "nb": 143}, {"dep": "dep33", "nb": 1710}, {"dep": "dep34", "nb": 1836}, {"dep": "dep35", "nb": 695}, {"dep": "dep36", "nb": 145}, {"dep": "dep37", "nb": 586}, {"dep": "dep38", "nb": 2929}, { "dep": "dep39", "nb": 506}, {"dep": "dep40", "nb": 308}, {"dep": "dep41", "nb": 222}, {"dep": "dep42", "nb": 1501}, {"dep": "dep43", "nb": 384}, {"dep": "dep44", "nb": 2212}, {"dep": "dep45", "nb": 545}, {"dep": "dep46", "nb": 139}, { "dep": "dep47", "nb": 246}, {"dep": "dep48", "nb": 60}, {"dep": "dep49", "nb": 699}, {"dep": "dep50", "nb": 187}, {"dep": "dep51", "nb": 413}, {"dep": "dep52", "nb": 201}, {"dep": "dep53", "nb": 194}, {"dep": "dep54", "nb": 558}, { "dep": "dep55", "nb": 154}, {"dep": "dep56", "nb": 380}, {"dep": "dep57", "nb": 1116}, {"dep": "dep58", "nb": 206}, {"dep": "dep59", "nb": 2190}, {"dep": "dep60", "nb": 597}, {"dep": "dep61", "nb": 179}, {"dep": "dep62", "nb": 824}, { "dep": "dep63", "nb": 351}, {"dep": "dep64", "nb": 505}, {"dep": "dep65", "nb": 158}, {"dep": "dep66", "nb": 927}, {"dep": "dep67", "nb": 776}, {"dep": "dep68", "nb": 520}, {"dep": "dep69", "nb": 4557}, {"dep": "dep70", "nb": 251}, { "dep": "dep71", "nb": 682}, {"dep": "dep72", "nb": 662}, {"dep": "dep73", "nb": 1039}, {"dep": "dep74", "nb": 1509}, {"dep": "dep75", "nb": 1785}, {"dep": "dep76", "nb": 802}, {"dep": "dep77", "nb": 932}, {"dep": "dep78", "nb": 1084}, { "dep": "dep79", "nb": 394}, {"dep": "dep80", "nb": 365}, {"dep": "dep81", "nb": 889}, {"dep": "dep82", "nb": 722}, {"dep": "dep83", "nb": 1129}, {"dep": "dep84", "nb": 684}, {"dep": "dep85", "nb": 1517}, {"dep": "dep86", "nb": 444}, { "dep": "dep87", "nb": 256}, {"dep": "dep88", "nb": 486}, {"dep": "dep89", "nb": 368}, {"dep": "dep90", "nb": 165}, {"dep": "dep91", "nb": 1026}, {"dep": "dep92", "nb": 687}, {"dep": "dep93", "nb": 540}, {"dep": "dep94", "nb": 838}, {"dep": "dep95", "nb": 701}];
+        $.each(jsonData, function (key, data) {
+            depData[data.dep] = data.nb;
+            allData.push(data.nb);
+            if (data.nb > dataMax) {
+                dataMax = data.nb;
+            }
+            if (data.nb < dataMin) {
+                dataMin = data.nb;
+            }
+        });
+
+        var quantize = d3.scale.quantile().domain([dataMin, dataMax]).range(d3.range(nbQuartile));
+        var total = 0;
+        $.each(jsonData, function (key, data) {
+            total += data.nb;
+            depData[data.dep] = data.nb;
+            allData.push(data.nb);
+            if (data.nb > dataMax) {
+                dataMax = data.nb;
+            }
+            if (data.nb < dataMin) {
+                dataMin = data.nb;
+            }
+        });
+
+        function percentage(x) {
+            return Math.round(1000 * x / total) / 10 + "%";
+        }
+
+        function adaptLegenda(bottomSvg) {
+            d3.select("#legenda")
+                .attr("height", hPanelLegenda * nbQuartile)
+                .attr("transform", "translate(0," + (bottomSvg - hPanelLegenda * (nbQuartile + 1)) + ")");
+        }
+
+        function colorMap(svg) {
+            d3.selectAll('#layer10 path')
+                .datum(function () {
+                    return depData[this.id];
+                })
+                .attr("class", function (d) {
+                    return "q" + quantize(depData[this.id]) + "-" + nbQuartile;
+                })
+                .on("mousemove", function () {
+                    var mouse = d3.mouse(svg.node())
+                        .map(function (d0) {
+                            return parseInt(d0);
+                        });
+                    tooltip.classed("hidden", false)
+                        .attr("style", "left:" + (mouse[0] + 25) + "px;top:" + mouse[1] + "px")
+                        .html($(this).attr("inkscape:label") + '<br />' + this.__data__ + " - " + percentage(this.__data__));
+                })
+                .on("mouseout", function () {
+                    tooltip.classed("hidden", true);
+                });
+        }
+
+        function drawLegend(qMin, qMax) {
+            d3.selectAll("#legenda rect")
+                .remove();
+            d3.select("#legenda")
+                .selectAll("rect")
+                .data(d3.range(nbQuartile))
+                .enter()
+                .append("rect")
+                .attr("width", wPanelLegenda)
+                .attr("height", hPanelLegenda)
+                .attr("x", "0")
+                .attr("y", function (d, i) {
+                    return i * hPanelLegenda;
+                })
+                .attr("class", function (d, i) {
+                    return "q" + i + "-" + nbQuartile;
+                    });
+
+            d3.selectAll("#legenda text")
+                .remove();
+            d3.selectAll("#legenda")
+                .selectAll("text")
+                .data(d3.range(nbQuartile))
+                .enter()
+                .append("text")
+                .attr("x", wPanelLegenda + 3)
+                .attr("y", function (d, i) {
+                    return ((i + 1) * hPanelLegenda - (hPanelLegenda / 3));
+                })
+                .text(function (d, i) {
+                    return i < (nbQuartile - 1) ? "< " + Math.floor(1 + quantize.quantiles()[i]) : (Math.floor(1 + quantize.quantiles()[i - 1])) + " et plus";
+                })
+                .attr("class", "textLegenda");
+        }
+
+        $(document).ready(function () {
+            tooltip = d3.select("#tooltipMap").attr("class", "tooltip").classed("hidden", true);
+            $("#franceMap").load("data/DepartementsFrance.svg", function () {
+                var minX = 0,
+                    minY = 0,
+                    svg = d3.select('#franceMap svg'),
+                    vbHeight = svg.attr("height"),
+                    vbWidth = svg.attr("width"),
+                    bottomSvg;
+
+                function changeViewBox () {
+                    var vb = minX + " " + minY + " " + vbWidth + " " + vbHeight;
+                    svg.attr("viewBox", vb);
+                }
+
+                changeViewBox();
+                bottomSvg = svg.attr("height");
+
+                svg.attr("class", "Blues")
+                    .attr("preserveAspectRatio", "none");
+                colorMap(svg);
+
+                svg.append("g")
+                    .attr("id", "legenda");
+                d3.select("#legenda")
+                    .attr("x", 0)
+                    .attr("y", (bottomSvg - hPanelLegenda * (nbQuartile + 1)));
+
+                adaptLegenda(bottomSvg);
+                drawLegend(dataMin, dataMax);
+
+                d3.select("#colorBrewer")
+                    .on("change", function () {
+                        svg.attr("class", this.value);
+                    });
+
+                d3.select("#nbQuartiles")
+                    .on("change", function () {
+                        nbQuartile = parseInt(this.value);
+                        quantize = d3.scale.quantile().domain([dataMin, dataMax]).range(d3.range(nbQuartile));
+                        colorMap(svg);
+                        adaptLegenda(bottomSvg);
+                        drawLegend(dataMin, dataMax);
+                    });
+
+                d3.select("#vpWidth")
+                    .attr("value", vbWidth)
+                    .on("change", function () {
+                        svg.attr("width", this.value);
+                    });
+
+                d3.select("#vpHeight")
+                    .attr("value", vbHeight)
+                    .on("change", function () {
+                        svg.attr("height", this.value);
+                    });
+
+                d3.select("#vbWidth")
+                    .attr("value", vbWidth)
+                    .on("change", function () {
+                        vbWidth = this.value;
+                        changeViewBox();
+                    });
+
+                d3.select("#vbHeight")
+                    .attr("value", vbHeight)
+                    .on("change", function () {
+                        vbHeight = this.value;
+                        changeViewBox();
+                    });
+
+                d3.select("#vbMinX")
+                    .on("change", function () {
+                        minX = this.value;
+                        changeViewBox();
+                    });
+
+                d3.select("#vbMinY")
+                    .on("change", function () {
+                        minY = this.value;
+                        changeViewBox();
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="hint">Use this menu to change the color scale</div>
+<div>
+    <select id="colorBrewer">
+        <optgroup label="Colors by Cynthia Brewer.">
+            <option value="YlGn">YlGn</option>
+            <option value="YlGnBu">YlGnBu</option>
+            <option value="GnBu">GnBu</option>
+            <option value="BuGn">BuGn</option>
+            <option value="PuBuGn">PuBuGn</option>
+            <option value="PuBu">PuBu</option>
+            <option value="BuPu">BuPu</option>
+            <option value="RdPu">RdPu</option>
+            <option value="PuRd">PuRd</option>
+            <option value="OrRd">OrRd</option>
+            <option value="YlOrRd">YlOrRd</option>
+            <option value="YlOrBr">YlOrBr</option>
+            <option value="Purples">Purples</option>
+            <option value="Blues" selected>Blues</option>
+            <option value="Greens">Greens</option>
+            <option value="Oranges">Oranges</option>
+            <option value="Reds">Reds</option>
+            <option value="Greys">Greys</option>
+        </optgroup>
+    </select>
+
+    <select id="nbQuartiles">
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6" selected>6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+    </select>
+
+    <br/>
+    <label for="#vpWidth">viewport width: </label>
+    <input type="range" id="vpWidth" min="0" max="1600" step="10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label for="#vpHeight">viewport height: </label>
+    <input type="range" id="vpHeight" min="0" max="1600" step="10">
+    <br/>
+    <label for="#vbWidth">viewBox width: </label>
+    <input type="range" id="vbWidth" min="0" max="1600" step="10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label for="#vbHeight">viewBox height: </label>
+    <input type="range" id="vbHeight" min="0" max="1600" step="10">
+    <br/>
+    <label for="#vbMinX">viewBox min-x: </label>
+    <input type="range" id="vbMinX" min="-600" max="600" step="10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label for="#vbMiny">viewBox min-y: </label>
+    <input type="range" id="vbMinY" min="-600" max="600" step="10">
+</div>
+<br/>
+<div id="tooltipMap"></div>
+<div id="franceMap"></div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+    <script src="../../js/d3/d3.v3.js"></script>
+</head>
+<body>
+    <div id="divd3"></div>
+    <script>
+        var dataset = [1, 2, 3, 5, 8, 13, 21];
+        d3.select("#divd3")
+            .selectAll("p")
+            .data(dataset)
+            .enter()
+            .append("p")
+            .text(function (d) {
+                return d;
+            });
+
+        dataset = [101, 102, 103, 105, 108];
+        d3.select("#divd3")
+            .selectAll("p")
+            .data(dataset)
+            .exit()
+            .remove();
+    </script>
+</body>
+</html>

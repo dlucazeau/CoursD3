@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+    <script src="../../js/d3/d3.v3.js"></script>
+    <style>
+        p {
+            font: bold 14px monospace;
+        }
+
+        .enter {
+            color: green;
+        }
+
+        .update {
+            color: blue;
+        }
+
+        .exit {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="divd3"></div>
+    <script>
+        var ds1 = [1, 2, 3, 5, 8, 13, 21],
+            ds2 = [101, 102, 103, 105, 108, 113, 121, 134],
+            ds3 = [101, 103, 105, 108, 113, 121],
+            int1 = 4000,
+            int2 = 1000;
+
+        function update(ds) {
+            var selection = d3.select("#divd3")
+                .selectAll("p")
+                .data(ds);
+
+            selection
+                .text(function (d) {
+                    return "Update: " + d;
+                })
+                .attr("class", "update");
+
+            selection.enter()
+                .append("p")
+                .text(function (d) {
+                    return "Enter: " + d;
+                })
+                .attr("class", "enter");
+
+            selection.exit()
+                .text(function (d) {
+                    return "Exit: " + d;
+                })
+                .attr("class", "exit");
+
+            setTimeout(function () {
+                selection.exit()
+                        .remove();
+            }, int2);
+        }
+
+        function exec () {
+            d3.select("#divd3")
+                .selectAll("p")
+                .remove();
+            update(ds1);
+            setTimeout(function () {
+                update(ds2);
+                setTimeout(function () {
+                    update(ds3);
+                }, int2);
+            }, int2);
+        }
+
+        exec();
+        setInterval(exec, int1);
+    </script>
+</body>
+</html>

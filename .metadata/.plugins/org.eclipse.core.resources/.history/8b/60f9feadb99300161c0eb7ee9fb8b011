@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: auto;
+            position: relative;
+            /*width: 960px;*/
+        }
+
+        .node {
+            border: solid 1px white;
+            font: 12px sans-serif;
+            line-height: 12px;
+            overflow: hidden;
+            position: absolute;
+            text-indent: 2px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="dluTreeMap"></div>
+<script src="../../js/d3/d3.v3.js"></script>
+<script>
+    var margin = {top: 0, right: 0, bottom: 0, left: 0},
+            width = 1900 - margin.left - margin.right,
+            height = 1500 - margin.top - margin.bottom;
+
+    var color = d3.scale.category20();
+
+    var treemap = d3.layout.treemap()
+            .size([width, height])
+            .sticky(true)
+            .value(function (d) {
+                return d.total;
+            });
+
+    var div = d3.select("#dluTreeMap").append("div")
+//            .style("position", "relative")
+            .style("width", (width + margin.left + margin.right) + "px")
+            .style("height", (height + margin.top + margin.bottom) + "px");
+//            .style("left", margin.left + "px")
+//            .style("top", margin.top + "px");
+
+
+    function sumFromChildren (node) {
+        if (!node.children) {
+            node.golds = node.golds;
+            node.silvers = node.silvers;
+            node.bronzes = node.bronzes;
+            node.total = node.total;
+            return {total: node.total, golds: node.golds, silvers: node.silvers, bronzes: node.bronzes};
+        }
+
+        node.golds = 0;
+        node.silvers = 0;
+        node.bronzes = 0;
+        node.total = 0;
+        node.children.forEach(function (elt) {
+            var obj = sumFromChildren(elt);
+            node.golds += obj.golds
+            node.silvers += obj.silvers;
+            node.bronzes += obj.bronzes;
+            node.total += obj.total;
+        });
+        return {total: node.total, golds: node.golds, silvers: node.silvers, bronzes: node.bronzes};
+    }
+
+//    function filterNodes (node) {
+//        if (!node.children) {
+//            if (node.total > 128) {
+//                return node;
+//            }
+//
+//        }
+//    }
+
+    d3.csv("data/SummerOlympic.csv",
+            function (d) {
+                if (d.CODE !== "") {
+                    return {
+                        idCountry: d.CODE,
+                        Golds: +d.Golds,
+                        Silvers: +d.Silvers,
+                        Bronzes: +d.Bronzes,
+                        Total: +d.Total
+                    };
+                }
+            },
+            function (error, rows) {
+                counters = d3.nest()
+                        .key(function(d) { return d.idCountry; })
+                        .map(rows);
+
+                d3.csv("data/medals.csv",
+                        function (d) {
+                            var m = counters[d.idcountry];
+                            if (m) {
+                                return {
+                                    Continent: d.namecontinent,
+                                    Region: d.nameregion,
+                                    idCountry: d.idcountry,
+                                    Country: d.nom,
+                                    Golds: m[0].Golds,
+                                    Silvers: m[0].Silvers,
+                                    Bronzes: m[0].Bronzes,
+                                    Total: m[0].Total
+                                };
+                            }
+                        },
+                        function (error, rows) {
+                            var temp = d3.nest()
+                                    .key(function(d) { return d.Continent; })
+                                    .key(function(d) { return d.Region; })
+                                    .entries(rows);
+                            nbNodes = 1;
+                            medals = {
+                                "name": "World",
+                                "children":
+                                        temp.map(function (continent) {
+                                            nbNodes++;
+                                            return {
+                                                "name": continent.key,
+                                                "children":
+                                                        continent.values.map(function (region) {
+                                                            nbNodes++;
+                                                            return {
+                                                                "name": region.key,
+                                                                "children":
+                                                                        region.values.map(function (country) {
+                                                                            nbNodes++;
+                                                                            if (country.Total > 128) {
+                                                                                return {
+                                                                                    name: country.Country,
+                                                                                    golds: country.Golds,
+                                                                                    silvers: country.Silvers,
+                                                                                    bronzes: country.Bronzes,
+                                                                                    total: country.Total
+                                                                                };
+                                                                            } else {
+                                                                                return {};
+                                                                            }
+                                                                        })  || {}
+                                                            };
+                                                        }) || {}
+                                            };
+                                        }) || {}
+                            };
+
+                            console.log(medals);
+                            medals.x0 = 0;
+                            medals.y0 = 0;
+
+                            sumFromChildren(medals);
+                            console.log(medals);
+                            var node = div.datum(medals).selectAll(".node")
+                                    .data(treemap.nodes)
+                                    .enter().append("div")
+                                    .attr("class", "node")
+                                    .call(position)
+                                    .style("background", function (d) {
+                                        return d.children ? color(d.name) : null;
+                                    })
+                                    .text(function (d) {
+                                        return d.children ? null : d.name + "\n(" + d.total + ")";
+                                    });
+
+                            d3.selectAll("input").on("change", function change() {
+                                var value = this.value !== "count"
+                                        ? function () {
+                                    return 1;
+                                }
+                                        : function (d) {
+                                    return d.total;
+                                };
+
+                                node.data(treemap.value(value).nodes)
+                                        .transition()
+                                        .duration(1500)
+                                        .call(position);
+                            });
+                        });
+            });
+
+
+    function position() {
+        this.style("left", function (d) {
+            return d.x + "px";
+        })
+                .style("top", function (d) {
+                    return d.y + "px";
+                })
+                .style("width", function (d) {
+                    return Math.max(0, d.dx - 1) + "px";
+                })
+                .style("height", function (d) {
+                    return Math.max(0, d.dy - 1) + "px";
+                });
+    }
+</script>
+</body>
+</html>

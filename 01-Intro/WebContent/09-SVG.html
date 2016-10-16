@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+    <script src="../../js/d3/d3.v3.js"></script>
+    <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+    <style>
+        text {
+            font-family: sans-serif;
+            font-size: 11px;
+            fill: white;
+            text-anchor: middle;
+        }
+    </style>
+</head>
+<body>
+<script>
+    var w = 500,
+        h = 100,
+        paddingBar = 1,
+        dataset = [5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 11, 12, 15, 20, 18, 17, 16, 18, 23, 25],
+        wBar = w / dataset.length - paddingBar,
+        svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+    svg.selectAll("rect")
+        .data(dataset)
+        .enter()
+        .append("rect")
+        .attrs({
+            x: function (d, i) {
+                return i * (w / dataset.length);
+            },
+            y: function (d) {
+                return h - d * 4;
+            },
+            width: wBar,
+            height: function (d) {
+                return d * 4;
+            },
+            fill: function (d) {
+                return "rgb(0, 0, " + (d * 10) + ")";
+            }
+        });
+    svg.selectAll("text")
+        .data(dataset)
+        .enter()
+        .append("text")
+        .text(function (d) {
+            return d;
+        })
+        .attrs({
+            x: function (d, i) {
+                return i * (w / dataset.length) + (w / dataset.length - paddingBar) / 2;
+            },
+            y: function (d) {
+                return h - (d * 4) + 15;
+            }
+        });
+</script>
+</body>
+</html>

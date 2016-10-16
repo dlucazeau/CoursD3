@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>DataViz with D3.js</title>
+        <script src="../../js/d3/d3.v3.js"></script>
+        <style>
+            path {
+            	stroke: #91268E;
+            	stroke-width: .5;
+            	fill: none;
+            }
+
+            .axis {
+                shape-rendering: crispEdges;
+            }
+
+            .axis text{
+                text-anchor: end;
+                fill: blue;
+                font-size:7px;
+            }
+
+            text.labelPoints{
+                text-anchor: middle;
+                font-size:7px;
+            }
+
+            .axis path {
+/*                 marker-end:url(#markerArrow); */
+                stroke: blue;
+                stroke-width: 1;
+            }
+
+            .axis .tick line {
+                stroke: blue;
+            }
+
+
+            .axis line.grid {
+                opacity: 1;
+                stroke: lightgrey;
+                stroke-width: 1;
+                stroke-dasharray: 2, 4;
+            }
+
+            #titre {
+                fill:#F8981D;
+                font-size: small;
+                text-anchor: middle;
+                font-weight: bold;
+            }
+
+            .titre {
+                fill: blue;
+                font-size: small;
+                text-anchor: middle;
+                font-weight: bold;
+            }
+
+            line.max {
+                stroke: red;
+                stroke-width: .4;
+            }
+
+            path.area {
+                stroke: none;
+                fill: steelblue;
+                fill-opacity: .2;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="divGraphique" class="aGraph" style="position:absolute;top:10px;left:10px; float:left;"></div>
+        <script>
+			var grandWidth = 600, grandHeight = 400;
+
+        	var margin = {top: 40, right: 40, bottom: 60, left: 60},
+            width = grandWidth - margin.left - margin.right,
+            height = grandHeight - margin.top - margin.bottom;
+
+        	////////////////////////////// Les données de base
+        	// Original http://www.insee.fr/fr/ffc/figure/NATnon03337.xls
+         	//var dataset = [3.5, 3.9, 4.3, 4.5, 5.1, 5.4, 6.4, 6.9, 7.2, 8.5, 9, 9, 9.1, 8.8, 8.2, 7.9, 8.2, 9, 10.1, 10.7, 10.1, 10.6, 10.8, 10.3, 10, 8.6, 7.8, 7.9, 8.5, 8.9, 8.9, 8.8, 8, 7.4, 9.1, 9.2, 9.3, 9.9, 10.5];
+         	var dataset1 = [3.5, 3.9, 4.3, 4.5, 5.1, 5.4, 6.4, 6.9, 7.2, 8.5, 9, 9, 9.1, 8.8, 8.2, 7.9, 8.2, 9, 10.1, 10.7, 10.1, 10.6, 10.8, 10.3, 10, 8.6, 7.8, 7.9, 8.5, 8.9, 8.9, 8.8, 8, 7.4, 9.1, 9.2, 9.3, 9.9, 10.5];
+ 			var baseYear = 1975;
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            var max, min, maxData, minData, avgData;
+			var pasY = 2.5;
+            var  Intercept = 6.053205, Slope = 0.113664;
+
+            // Fabrication du dataset des progressions
+            var dataset = [];
+            for(var i=1; i< dataset1.length; i++) {
+            	dataset.push(dataset1[i] - dataset1[i-1]);
+            }
+
+            var data = [];
+            for(var i = 0; i < dataset.length; i++) {
+            	data.push({x: i, y: dataset[i]});
+            }
+
+            function abLine(x) {
+            	return Slope * x + Intercept;
+            }
+
+
+            function minmax() {
+                max = Number.MIN_VALUE;
+                min = Number.MAX_VALUE;
+                var sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
+                var N = dataset.length;
+
+                for(var i = 0; i < dataset.length; i++) {
+                	sumX += i;
+                	sumY += dataset[i];
+                	sumX2 += i * i;
+                	sumXY += i * dataset[i];
+                    // Recherche minimum et maximum
+                    if(dataset[i] > max) max = dataset[i];
+                    if(dataset[i] < min) min = dataset[i];
+                }
+                avgData = sumY / N;
+                minData = min;
+                maxData = max;
+                //max = (Math.round(max / pasY) + 1) * pasY;
+                //max = Math.round(max+.5);
+                //max = 100;
+
+                // calcul de la régression linéaire par les moindres carrés
+                Slope = (N * sumXY - sumX * sumY) / (N * sumX2 - sumX * sumX);
+                // Intercept = (sumY / N) - Slope * (sumX / N);
+                Intercept = avgData - Slope * (sumX / N);
+                //console.log("Intercept : " + Intercept + " - Slope : " + Slope);
+            }
+
+            minmax();
+
+            var svg = d3.select('#divGraphique').append('svg')
+            			.attr('width', grandWidth)
+            			.attr('height', grandHeight)
+            			.attr('id', 'svgGraphique');
+
+			// Bordure
+            svg.append('rect')
+            	.attr('x', 0)
+            	.attr('y', 0)
+            	.attr('width', grandWidth)
+            	.attr('height', grandHeight)
+            	.style({'stroke-width': 2, 'stroke': 'SteelBlue', 'fill':'LightSteelBlue', 'opacity': .2});
+// 			svg.append("svg:defs")
+//           	  	.append("svg:marker")
+//                 .attr("id", 'markerArrow')
+//                 //.attr("viewBox", "0 -5 10 10")
+//                 .attr("refX", 2)
+//                 .attr("refY", 2)
+//                 .attr("markerWidth", 4)
+//                 .attr("markerHeight", 4)
+//                 .attr("orient", "auto")
+//                 .attr('markerUnits', 'strokeWidth')
+//               .append("svg:path")
+//                 .attr("d", "M0,0 L0,4 L5,2 L0,0")
+//                 .style({'stroke': '#000000', 'stroke-width': .2, 'stroke': 'blue', 'fill':'blue'});
+
+            var graph = svg.append('g')
+            			    .attr('id', 'graphique')
+            				.attr('transform', "translate(" + margin.left + "," + margin.top + ")");
+            graph.append('rect')
+    	     	.attr('x', 0)
+    	     	.attr('y', 0)
+    	     	.attr('width', width)
+    	     	.attr('height', height)
+    			.style({'fill': 'LightYellow', 'opacity': 1});
+
+            var xScale = d3.scale.linear().domain([0, dataset.length-1]).range([0, width]);
+            var yScale = d3.scale.linear().domain([min, max]).range([height, 0]);
+            var line = d3.svg.line()
+            			.x(function(d, i) {return xScale(i);})
+            			.y(function(d) {return yScale(d);});
+            graph.append('path')
+            		.attr('d', line(dataset));
+
+         	// Add the x-axis.
+            var xAxis = d3.svg.axis();
+            xAxis.scale(xScale)
+            	.tickFormat(function(d) { return d + baseYear; })
+            	.orient('bottom');
+            graph.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + (height) + ")")
+                .call(xAxis)
+              .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("transform", function(d) {
+                    return "rotate(-65) translate(-7, -7)"
+                    });
+
+            var yAxis = d3.svg.axis();
+
+            yAxis.scale(yScale)
+            	.orient('left');
+            graph.append("g")
+            	.attr("class", "y axis")
+            	.call(yAxis);
+
+            var dataPoints = graph.append("g")
+            	.attr('id', 'groupDataPoints')
+            	.selectAll('circle')
+            	.data(dataset)
+            	.enter()
+              .append('circle')
+            	.attr('r', 2)
+            	.attr('cx', function(d, i) {return xScale(i);})
+            	.attr('cy', function(d) {return yScale(d)})
+				.style({'stroke-width':1})
+				.attr('stroke', '#91268E')
+				.attr('fill', '#91268E');
+
+			d3.selectAll(".x.axis .tick")
+				.filter(function(d,i) {return i != 0;})
+			  .append('line')
+				.attr('x1', 0)
+				.attr('y1', 0)
+				.attr('x2', 0)
+				.attr('y2', -height)
+				.classed('grid', true);
+
+			d3.selectAll(".y .tick")
+				.filter(function(d,i) {return (i%2 == 0) && (i != 0);})
+			  .append('line')
+				.attr('x1', 0)
+				.attr('y1', 0)
+				.attr('x2', width)
+				.attr('y2', 0)
+				.classed('grid', true);
+
+			// Ligne du maximum
+			graph.append('line')
+				.attr('x1', 0)
+				.attr('y1', yScale(maxData))
+				.attr('x2', width)
+				.attr('y2', yScale(maxData))
+				.classed('max', true);
+
+			// Ligne de la moyenne
+			graph.append('line')
+				.attr('x1', 0)
+				.attr('y1', yScale(avgData))
+				.attr('x2', width)
+				.attr('y2', yScale(avgData))
+				.classed('max', true);
+
+			// interpolation linéaire
+			graph.append('line')
+				.attr('x1', 0)
+				.attr('y1', yScale(Intercept))
+				.attr('x2', width)
+				.attr('y2', yScale(abLine(dataset.length-1)))
+				.classed('max', true);
+
+			// Titre du graphe
+			graph.append("text")
+				.attr('id', 'titre')
+    			.attr("x", (width / 2))
+        		.attr("y", 0)
+        		.attr('dy', '-.5em')
+        		.text("Évolution du taux de chômage en France");
+
+			// Titre de l'axe des X
+			graph.append("text")
+				.attr('class', 'titre')
+    			.attr("x", (width / 2))
+        		.attr("y", (height+margin.bottom/2))
+        		.attr('dy', '1em')
+        		.text("Années");
+
+			// Titre de l'axe des Y
+			graph.append("text")
+				.attr('class', 'titre')
+    			.attr("y", (height / 2))
+        		.attr("x", (-margin.left/2))
+        		.attr('transform', 'rotate(-90,' +  (-margin.left/2) + ',' + (height/2) + ')')
+        		.text("Pourcentage");
+
+			/// Area
+
+// 			var area = d3.svg.area()
+// 						.x(function(d) { return xScale(d.x); })
+// 						.y0(function(d) { return yScale(d.y); })
+// 						.y1(function(d) { return yScale(abLine(d.x)); });
+// 			graph.selectAll('path.area')
+// 					.data(data)
+// 				.enter()
+// 					.append('path')
+// 					.attr('class', 'area')
+// 					.attr('d', area(data));
+			/*
+			var area = d3.svg.area()
+						.x(function(d) { return xScale(d.x); })
+						.y0(function(d) { return yScale(d.y); })
+						.y1(function(d) { return yScale(abLine(d.x)); });
+			graph.append('path')
+			.datum(data)
+					.attr('class', 'area')
+					.attr('d', area);
+			*/
+
+
+			// Cartouche de source des données
+			var urlData = 'http://www.insee.fr/fr/ffc/figure/NATnon03337.xls';
+			RenderTitleBlock(svg, urlData, grandWidth, grandHeight);
+
+			function RenderTitleBlock(elt, urlData, gw, gh) {
+    			var cartouche = elt.append('g');
+                var rectCartouche = cartouche.append("rect")
+                  	.attr("x", 0)
+                  	.attr("y", 0)
+                    .attr("rx", 3)
+                    .attr("ry", 7)
+    				.style("stroke-width", .5)
+                    .style({"fill-opacity": 0, 'stroke': 'black'});
+
+                var linkCartouche = cartouche.append("a")
+                    .attr("xlink:href", urlData);
+                // Utiliser http://stackoverflow.com/questions/14569415/read-width-of-d3-text-element
+                //  this.getComputedTextLength() ou  selection.node().getComputedTextLength().
+                var textCartouche = linkCartouche.append("text")
+                	.attr('id', 'textCartouche')
+    				.style("fill", "black")
+                    .style("font-size", "8px")
+                    .attr("text-anchor", "middle")
+                    //.style("pointer-events", "none")
+                    .text('Source ' + urlData);
+
+                //var size = d3.select('#textCartouche').node().getComputedTextLength();
+
+    			var bbox = this.d3.select('#textCartouche').node().getBBox();
+                cartoucheWidth = (Math.round(bbox.width/10) + 1) * 10;
+    			textCartoucheHeight = bbox.height;
+    			cartoucheHeight = (Math.round(bbox.height/2) + 1) * 2;
+                //console.log(cartoucheHeight);
+
+    			cartouche.attr("transform", 'translate(' + (gw-cartoucheWidth-7) + ',' + (gh-cartoucheHeight-7) + ')');
+    			rectCartouche.attr("height", cartoucheHeight)
+              		.attr("width", cartoucheWidth);
+    			textCartouche.attr("x", cartoucheWidth/2)
+              		.attr("y", cartoucheHeight/2)
+                    .attr("dy", (cartoucheHeight/4) + "px");
+			}
+        </script>
+    </body>
+</html>

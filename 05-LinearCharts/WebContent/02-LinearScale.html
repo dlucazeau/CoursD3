@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>DataViz with D3.js</title>
+        <script src="../../js/d3/d3.v3.js"></script>
+    </head>
+    <body>
+        <script>
+        var dataset = [3.5, 3.9, 4.3, 4.5, 5.1, 5.4, 6.4, 6.9, 7.2, 8.5, 9, 9, 9.1, 8.8, 8.2, 7.9, 8.2, 9, 10.1, 10.7, 10.1, 10.6, 10.8, 10.3, 10, 8.6, 7.8, 7.9, 8.5, 8.9, 8.9, 8.8, 8, 7.4, 9.1, 9.2, 9.3, 9.9, 10.5];
+
+		console.log("min = " + d3.min(dataset));
+		console.log("max = " + d3.max(dataset));
+
+		var x = d3.scale.linear().domain([0, dataset.length-1]).range([2, 11]);
+    	var y = d3.scale.linear().domain([0, 15]).range([2, 6]);
+
+    	var tikzString = "";
+//         for(var i=0; i < dataset.length; i++) {
+//         	var x0 = Math.round(x(i) * 10) / 10;
+//         	var y0 = Math.round(y(dataset[i]) * 10) / 10;
+//         	if(i%5 == 0) {
+//             	//tikzString += "\\draw[color=red] (" + x0 + "," + y0 + ") circle (0.02)  node {\\tiny " + dataset[i] + "};";
+//         		tikzString += "\\draw[color=black, dashed, very thin] (" + (x0-0.1) + ", 1.9 ) -- (" + x0 + ", 2 );";
+//         		tikzString += "\\draw (" + (x0-0.1) + ", 1.8) node {\\tiny " + (1975+i) + "};";
+//         	} else {
+//             	//tikzString += "\\draw[color=red] (" + x0 + "," + y0 + ") circle (0.02);";
+//         	}
+//         	//tikzString += "\\draw[color=red, dashed, very thin] (" + x0 + ",2) -- (" + x0 + "," + y0 + ");";
+
+//         }
+
+        for(var w=2.5; w<d3.max(dataset)+2.5; w+=2.5) {
+        	var y0 = Math.round(y(w) * 10) / 10;
+        	tikzString += "\\draw[color=red, dashed, very thin] (1.9, " + y0 + ") -- (11, " + y0 + ");";
+    		tikzString += "\\draw (1.7, " + y0 + ") node {\\textcolor{red}{\\tiny " + w + "}};";
+        }
+        console.log(tikzString);
+        </script>
+    </body>
+</html>

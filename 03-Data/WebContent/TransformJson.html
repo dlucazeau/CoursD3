@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+    <script src="../../js/d3/d3.v3.js"></script>
+    <style>
+        path {
+            stroke: #91268E;
+            stroke-width: .5;
+            fill: none;
+        }
+
+        .axis {
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            text-anchor: end;
+            fill: blue;
+            font-size: 7px;
+        }
+
+        text.labelPoints {
+            text-anchor: middle;
+            font-size: 7px;
+        }
+
+        .axis path {
+            /*                 marker-end:url(#markerArrow); */
+            stroke: blue;
+            stroke-width: 1;
+        }
+
+        .axis .tick line {
+            stroke: blue;
+        }
+
+        .axis line.grid {
+            opacity: 1;
+            stroke: lightgrey;
+            stroke-width: 1;
+            stroke-dasharray: 2, 4;
+        }
+
+        #titre {
+            fill: #F8981D;
+            font-size: small;
+            text-anchor: middle;
+            font-weight: bold;
+        }
+
+        .titre {
+            fill: blue;
+            font-size: small;
+            text-anchor: middle;
+            font-weight: bold;
+        }
+
+        line.max {
+            stroke: red;
+            stroke-width: .4;
+        }
+
+        path.area {
+            stroke: none;
+            fill: steelblue;
+            fill-opacity: .2;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="divGraphique" class="aGraph" style="position:absolute;top:10px;left:10px; float:left;"></div>
+    <script>
+        d3.json("../../data/climatologie.json",
+            function (error, json) {
+                var dataset = [];
+                if (error) {
+                    return console.warn(error);
+                }
+
+                json.forEach(function (d) {
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 1, 1);
+                    x.AvgTemp = d.Jan;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 2, 1);
+                    x.AvgTemp = d.Feb;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 3, 1);
+                    x.AvgTemp = d.Mar;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 4, 1);
+                    x.AvgTemp = d.Apr;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 5, 1);
+                    x.AvgTemp = d.May;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 6, 1);
+                    x.AvgTemp = d.Jun;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 7, 1);
+                    x.AvgTemp = d.Jul;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 8, 1);
+                    x.AvgTemp = d.Aug;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 9, 1);
+                    x.AvgTemp = d.Sep;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 10, 1);
+                    x.AvgTemp = d.Oct;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 11, 1);
+                    x.AvgTemp = d.Nov;
+                    dataset.push(x);
+
+                    var x = {};
+                    x.NumRegion = d.NumRegion;
+                    x.Region = d.Region;
+                    x.Periode = new Date(d.Year, 12, 1);
+                    x.AvgTemp = d.Dec;
+                    dataset.push(x);
+                });
+
+                var i,
+                    pasY = 2.5,
+                    Intercept,
+                    Slope,
+                    grandWidth = 600,
+                    grandHeight = 400,
+                    margin = {top: 40, right: 40, bottom: 60, left: 60},
+                    width = grandWidth - margin.left - margin.right,
+                    height = grandHeight - margin.top - margin.bottom,
+                    rawTemp = dataset.map(function (d) {
+                        return d.AvgTemp;
+                    }),
+                    minTemp = d3.min(rawTemp),
+                    maxTemp = d3.max(rawTemp),
+                    svg = d3.select('#divGraphique')
+                        .append('svg')
+                        .attr('width', grandWidth)
+                        .attr('height', grandHeight)
+                        .attr('id', 'svgGraphique'),
+
+                    graph = svg
+                        .append('g')
+                        .attr('id', 'graphique')
+                        .attr('transform', "translate(" + margin.left + "," + margin.top + ")"),
+
+                    xScale = d3.time.scale()
+                        .domain([new Date(1997, 1, 1), new Date(2011, 12, 1)])
+                        .nice(d3.time.month)
+                        .range([0, width]),
+
+                    yScale = d3.scale.linear()
+                        .domain([minTemp, maxTemp])
+                        .range([height, 0]),
+
+                    xAxis = d3.svg.axis(),
+                    yAxis = d3.svg.axis()
+                            .ticks(5),
+
+                    colors = d3.scale.category10();
+
+                xAxis.scale(xScale)
+                        .orient('bottom')
+                        .ticks(d3.time.year, 3),
+
+                graph.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + (height) + ")")
+                    .call(xAxis)
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("transform", function (d) {
+                        return "rotate(-65) translate(-7, -7)";
+                    });
+
+                yAxis.scale(yScale)
+                        .orient('left');
+                graph.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis);
+
+                for (var i = 0; i < 7; i++) {
+                    var filtered = dataset.filter(function (d) {
+                        return d.NumRegion == i + 1;
+                    });
+                    var line = d3.svg.line().interpolate('monotone')
+                            .x(function (d) {
+                                return xScale(d.Periode);
+                            })
+                            .y(function (d) {
+                                return yScale(d.AvgTemp);
+                            });
+
+                    graph.append('path')
+                        .attr('d', line(filtered))
+                        .style('stroke', colors(i));
+                }
+            });
+</script>
+</body>
+</html>

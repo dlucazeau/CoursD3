@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>DataViz with D3.js</title>
+        <script src="../../js/d3/d3.v3.js"></script>
+    </head>
+    <body>
+    <script>
+        // var data = [57996401,58280135,58571237,58852002,59070077,59280577,59487413,59691177,59899347,60122665,60508150,60941410,61385070,61824030,62251062,62730537,63186117,63600690,63961859,64304500,64612939,64933400,65251737,65542916,65820916];
+        // var data = [3.466170364,3.858763616,4.332241221,4.524547684,5.075129844,5.411298140,6.380094586,6.943014591,7.232886165,8.459389121,8.954332596,8.966357574,9.106810287,8.793121187,8.163911373,7.933858736,8.159764997,9.029707414,10.067579029,10.690639520,10.084662696,10.587575987,10.769930946,10.325709509,10.035035945,8.554094637,7.782682151,7.924013787,8.502128389,8.850184834,8.861152836,8.832971992,7.986730573,7.393403892,9.116879878];
+        var dataset = [3.5, 3.9, 4.3, 4.5, 5.1, 5.4, 6.4, 6.9, 7.2, 8.5, 9, 9, 9.1, 8.8, 8.2, 7.9, 8.2, 9, 10.1, 10.7, 10.1, 10.6, 10.8, 10.3, 10, 8.6, 7.8, 7.9, 8.5, 8.9, 8.9, 8.8, 8, 7.4, 9.1, 9.2, 9.3, 9.9, 10.5];
+        //var x = '<svg width="1000" height="600">';
+//         var max = Number.MIN_VALUE;
+//         var min = Number.MAX_VALUE;
+//         var fact = 5;
+//         var x = '<path d="M ';
+//         x += fact * 1 + ' ' + (fact * dataset[0]);
+//         x += ' L ';
+//         for(var i=1; i<dataset.length-1; i++) {
+//         	if(dataset[i] > max) max = dataset[i];
+//         	if(dataset[i] < min) min = dataset[i];
+//             x += (fact * (i+1)) + ' ' + (fact * dataset[i]) + ", ";
+//         }
+//         x += (fact * (i+1)) + ' ' + (fact * dataset[i]);
+//         x += '" stroke="red" stroke-width="2" fill="none" />'
+//         //x += '</svg>';
+// 		console.log("min = " + min);
+// 		console.log("max = " + max);
+//         console.log(x);
+
+        var x=d3.scale.linear().domain([0, dataset.length-1]).range([2, 11]);
+        var y=d3.scale.linear().domain([0, 15]).range([2, 6]);
+        var tikzPath = "";
+        for(var i=0; i<dataset.length; i++) {
+        	var x0 = Math.round(x(i) * 10) / 10;
+        	var y0 = Math.round(y(dataset[i]) * 10) / 10;
+        	tikzPath += "(" + x0 + ", " + y0 + ") -- ";
+
+        	//console.log("i=" + i + " - x(i)=" + x(i));
+        }
+        console.log(tikzPath);
+    </script>
+    </body>
+</html>

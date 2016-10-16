@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>DataViz with D3.js</title>
+        <script src="../../js/d3/d3.v3.js"></script>
+    </head>
+    <body><br/>
+    <div id="divd3"></div>
+        <script>
+            var dataset = [5, 10, 15, 20, 25];
+            d3.select("#divd3").selectAll("p")
+                .data(dataset)
+                .enter()
+                .append("p")
+                .text(function(d) { return d; })
+                .style("color", function(d) {
+                    if (d > 15) {
+                        return "red";
+                    } else {
+                        return "black";
+                    }
+                });
+            console.log(d3.selectAll("p"));
+        </script>
+    </body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>DataViz with D3.js</title>
+
+    <style>
+        path {
+            /*stroke: #91268E;*/
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .axis {
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            text-anchor: end;
+            fill: blue;
+            font-size: 7px;
+        }
+
+        text.labelPoints {
+            text-anchor: middle;
+            font-size: 7px;
+        }
+
+        .axis path {
+            /*                 marker-end:url(#markerArrow); */
+            stroke: blue;
+            stroke-width: 1;
+        }
+
+        .axis .tick line {
+            stroke: blue;
+        }
+
+        .axis line.grid {
+            opacity: 1;
+            stroke: lightgrey;
+            stroke-width: 1;
+            stroke-dasharray: 2, 4;
+        }
+
+        #titre {
+            fill: #F8981D;
+            text-anchor: middle;
+            font-weight: bold;
+        }
+
+        .titreAxe {
+            fill: blue;
+            text-anchor: middle;
+            font-weight: bold;
+        }
+
+        .avgLine {
+            fill: darkgreen;
+        }
+
+        .trendLine {
+            fill: darkred;
+        }
+
+        line.max {
+            stroke: darkgreen;
+            stroke-width: 2;
+        }
+
+        line.trend {
+            stroke: darkred;
+            stroke-width: 2;
+        }
+
+        path.area {
+            stroke: none;
+            fill: steelblue;
+            fill-opacity: .2;
+        }
+    </style>
+</head>
+<body>
+<div id="divGraphique">
+</div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script>
+    function lineChart() {
+        var divGraphique = '#divGraphique';
+        //var pasY = 2.5;
+        //var Intercept, Slope;
+        var width, height = 600;
+        var margin = {top: 100, right: 40, bottom: 100, left: 60};
+        var dataset = [];
+        var max, min, maxData, minData, avgData;
+        var pasY = 2.5;
+        var Intercept, Slope;
+
+        function minmax() {
+            max = Number.MIN_VALUE;
+            min = Number.MAX_VALUE;
+            var sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
+            var N = dataset.length;
+
+            for (var i = 0; i < dataset.length; i++) {
+                sumX += i;
+                sumY += dataset[i].Nb;
+                sumX2 += i * i;
+                sumXY += i * dataset[i].Nb;
+                // Recherche minimum et maximum
+                if (dataset[i].Nb > max) max = dataset[i].Nb;
+                if (dataset[i].Nb < min) min = dataset[i].Nb;
+            }
+            avgData = sumY / N;
+            minData = min;
+            maxData = max;
+            max = (Math.round(max / pasY) + 1) * pasY;
+            max = Math.round(max + .5);
+
+            // calcul de la régression linéaire par les moindres carrés
+            Slope = (N * sumXY - sumX * sumY) / (N * sumX2 - sumX * sumX);
+            // Intercept = (sumY / N) - Slope * (sumX / N);
+            Intercept = avgData - Slope * (sumX / N);
+            //console.log("Intercept : " + Intercept + " - Slope : " + Slope);
+
+            roundAvg = Math.round(10 * (avgData + 0.05)) / 10;
+        };
+
+        var svgGraphic = {
+            width: function (w) {
+                if (!arguments.length)
+                    return width;
+                if (width !== w) {
+                    width = w;
+                    this.renderChart();
+                }
+                return this;
+            },
+            height: function (h) {
+                if (!arguments.length)
+                    return height;
+                if (height !== h) {
+                    height = h;
+                    this.renderChart();
+                }
+                return this;
+            },
+            renderChart: function () {
+                $(divGraphique).empty();
+                if (width === undefined) {
+                    width = parseInt(d3.select(divGraphique).style('width')) - 2;
+                }
+                var w = width - margin.left - margin.right,
+                        h = height - margin.top - margin.bottom;
+
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Calcul des échelles
+
+                var xScale = d3.time.scale()
+                        .domain([new Date(2010, 7, 1), new Date(2014, 12, 31)])
+                        .nice(d3.time.month)
+                        .range([0, w]);
+
+                var yScale = d3.scale.linear().domain([0, 20]).range([h, 0]);
+
+                var colors = d3.scale.category10();
+
+                var fontSizeScaleTitre = d3.scale.linear()
+                        .domain([300, 1600])
+                        .range([
+                            "italic bold 10px Georgia, serif",
+                            "italic bold 50px Georgia, serif"
+                        ]);
+
+                var fontSizeScaleTitreAxe = d3.scale.linear()
+                        .domain([300, 1600])
+                        .range([
+                            "bold 5px Georgia, serif",
+                            "bold 25px Georgia, serif"
+                        ]);
+
+                var fontSizeScaleTicks = d3.scale.linear()
+                        .domain([300, 1600])
+                        .range([
+                            "5px Georgia, serif",
+                            "10px Georgia, serif"
+                        ]);
+
+                var fontSizeScaleLine = d3.scale.linear()
+                        .domain([300, 1600])
+                        .range([
+                            "5px Georgia, serif",
+                            "14px Georgia, serif"
+                        ]);
+
+                var nbScaleXAxisTicks = d3.scale.quantize()
+                        .domain([300, 1600])
+                        .range([12, 6, 3]);
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Le SVG de base
+                var svg = d3.select(divGraphique).append('svg')
+                        .attr('width', width)
+                        .attr('height', height)
+                        .attr('id', 'svgGraphique');
+
+                svg.append("defs")
+                        .append("path")
+                        .attr('id', 'trend')
+                        .attr("d", "M0," + (yScale(Intercept)) + " L" + w + "," + yScale(Intercept + Slope * dataset.length));
+
+                svg.append("defs")
+                        .append("path")
+                        .attr('id', 'avg')
+                        .attr("d", "M0," + yScale(avgData) + " L" + w + "," + yScale(avgData));
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Bordure
+                svg.append('rect')
+                        .attr('x', 0)
+                        .attr('y', 0)
+                        .attr('width', width)
+                        .attr('height', height)
+                        .style({'stroke-width': 2, 'stroke': 'SteelBlue', 'fill': 'LightSteelBlue', 'opacity': .2});
+
+                var graph = svg.append('g')
+                        .attr('id', 'graphique')
+                        .attr('transform', "translate(" + margin.left + "," + margin.top + ")");
+
+                graph.append('rect')
+                        .attr('x', 0)
+                        .attr('y', 0)
+                        .attr('width', w)
+                        .attr('height', h)
+                        .style({'fill': 'LightYellow', 'opacity': 1});
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Add the x-Axis.
+                var xAxis = d3.svg.axis();
+
+                xAxis.scale(xScale)
+                        .orient('bottom')
+                        .tickFormat(d3.time.format("%d-%m-%Y"))
+                        .ticks(d3.time.month, nbScaleXAxisTicks(width));
+
+                graph.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + (h) + ")")
+                        .call(xAxis)
+                        .selectAll("text")
+                        .style("text-anchor", "end")
+                        .style("font", fontSizeScaleTicks(width))
+                        .attr("transform", function (d) {
+                            return "rotate(-25) translate(-7, -7)";
+                        });
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Add the y-Axis.
+                var yAxis = d3.svg.axis();
+
+                yAxis.scale(yScale)
+                        .orient('left')
+                        .ticks(5);
+
+                graph.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+                        .selectAll("text")
+                        .style("text-anchor", "end")
+                        .style("font", fontSizeScaleTicks(width));
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Le tracé lui-même
+                var line = d3.svg.line().interpolate('basis')
+                        .x(function (d) {
+                            return xScale(d.Day);
+                        })
+                        .y(function (d) {
+                            return yScale(d.Nb);
+                        });
+
+                graph.append('path')
+                        .attr('d', line(dataset))
+                        .style('stroke', colors(2));
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Ligne de la moyenne
+                graph.append('line')
+                        .attr('x1', 0)
+                        .attr('y1', yScale(avgData))
+                        .attr('x2', w)
+                        .attr('y2', yScale(avgData))
+                        .classed('max', true);
+
+                graph.append("text")
+                        .attr('class', 'avgLine')
+                        .style("font", fontSizeScaleLine(width))
+                        .attr('dy', '-.5em')
+                        .append("textPath")
+                        .attr("xlink:href", "#avg")
+                        .attr("startOffset", "99%")
+                        .attr("text-anchor", "end")
+                        .text("Moyenne (" + roundAvg + " jours)");
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Ligne de la tendance
+                graph.append('line')
+                        .attr('x1', 0)
+                        .attr('y1', yScale(Intercept))
+                        .attr('x2', w)
+                        .attr('y2', yScale(Intercept + Slope * dataset.length))
+                        .classed('trend', true);
+
+                graph.append("text")
+                        .attr('class', 'trendLine')
+                        .style("font", fontSizeScaleLine(width))
+                        .attr('dy', '-.5em')
+                        .append("textPath")
+                        .attr("xlink:href", "#trend")
+                        .attr("startOffset", "99%")
+                        .attr("text-anchor", "end")
+                        .text("Tendance");
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Titre du graphe
+                graph.append("text")
+                        .attr('id', 'titre')
+                        .attr("x", (w / 2))
+                        .attr("y", -margin.top / 2)
+                        .style("font", fontSizeScaleTitre(width))
+                        .text("Suivi de l'activité par 20 jours ouvrés glissants");
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Titre de l'axe des X
+                graph.append("text")
+                        .attr('class', 'titreAxe')
+                        .style("font", fontSizeScaleTitreAxe(width))
+                        .attr("x", (w / 2))
+                        .attr("y", (h + 2 * margin.bottom / 3))
+                        .attr('dy', '1em')
+                        .text("Période effective de septembre 2010 à février 2014");
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                // Titre de l'axe des Y
+                graph.append("text")
+                        .attr('class', 'titreAxe')
+                        .style("font", fontSizeScaleTitreAxe(width))
+                        .attr("y", (h / 2))
+                        .attr("x", (-margin.left / 2))
+                        .attr('transform', 'rotate(-90,' + (-margin.left / 2) + ',' + (h / 2) + ')')
+                        .text("Nombre de jours travaillés");
+
+                return this;
+            },
+            lineChart: function () {
+                // Construction du fichier de données
+                d3.json("data/dashboard.json",
+                        function (error, json) {
+                            if (error)
+                                return console.warn(error);
+                            json.forEach(function (d) {
+                                var x = {};
+                                x.Day = new Date(d.f1);
+                                x.Nb = d.f2;
+                                dataset.push(x);
+                            });
+
+                            minmax();
+                            svgGraphic.renderChart();
+                        }
+                );
+                return this;
+            },
+            resizeChart: function () {
+                return this.width(parseInt(d3.select(divGraphique).style('width')) - 2);//.renderChart();
+            }
+        };
+        svgGraphic.lineChart();
+        return svgGraphic;
+    }
+</script>
+<script>
+    var chart;
+    function resize() {
+        chart.resizeChart();
+    }
+
+    $(document).ready(function () {
+        chart = lineChart();
+    });
+
+    d3.select(window).on('resize', resize);
+</script>
+</body>
+</html>
